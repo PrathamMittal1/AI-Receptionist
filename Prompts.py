@@ -1,3 +1,4 @@
+import datetime
 '''
 Patient Scheduling
 An AI Receptionist (AIR) calls a patient for scheduling the appointment which is due next month
@@ -15,7 +16,8 @@ And AIR acknowledges the reading uploads to the patient and the doctor through a
 
 # For getting the name out of the text.
 # ----------------------------------------------------------
-Name_extract_prompt = '''Get the name that can be found in the following text. 
+Name_extract_prompt = '''Get the name that can be found in the following text.
+The text is transcribed from human natural speech.
 Do not include any extra text just return the name found.
 Do not even mention the name found in the text.
 If no name is found then simply return 'None'.
@@ -26,6 +28,7 @@ If no name is found then simply return 'None'.
 # For extracting the EMR ID out of the text.
 # ----------------------------------------------------------
 EMR_id_extract_prompt = '''Get the EMR ID that can be found in the following text.
+The text is transcribed from human natural speech.
 Do not include any extra text just return the ID found.
 Do not even mention the EMR ID found in the text.
 If no ID is found, then simply return 'None'.
@@ -34,9 +37,11 @@ If no ID is found, then simply return 'None'.
 
 # For reading the appointment date.
 # ----------------------------------------------------------
-Date_extract_prompt = '''Get the date that can be found in the following text.
-The date should be returned in DD-MM-YYYY format.
-If no year is mentioned, then consider the current ongoing year.
+Date_extract_prompt = f'''Get the date that can be found in the following text.
+The text is transcribed from human natural speech.
+The date should be returned in dd-mm-yyyy format.
+The current date is {datetime.datetime.now().strftime("%d-%m-%Y")}.
+If no month or year is mentioned, then consider the current ongoing month or year respectively.
 Do not include any extra words just return the date.
 
 '''
@@ -45,6 +50,7 @@ Do not include any extra words just return the date.
 # For reading the blood pressure readings
 # ----------------------------------------------------------
 heart_rate_extract_prompt = '''Get the list of heart rate readings from the text.
+The text is transcribed from human natural speech.
 The list should be in comma separated text format.
 Just return the list, do not include any extra words.
 For example, "72, 60, 85, 105, 75".
@@ -53,6 +59,8 @@ For example, "72, 60, 85, 105, 75".
 # For getting other health parameters
 # ----------------------------------------------------------
 other_health_parameters_extract_prompt = '''Extract the list of health issues from the text.
+The text is transcribed from human natural speech.
 The output list should be in comma seperated format.
 Do not include any text other than the name of health diseases.
+
 '''

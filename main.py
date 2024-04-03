@@ -15,14 +15,18 @@ api_key, _ = sk.openai_settings_from_dot_env()
 # Add OpenAI ChatCompletion service to the kernel
 kernel.add_service(OpenAIChatCompletion(ai_model_id="gpt-3.5-turbo", api_key=api_key))
 
+# Define prompt template for semantic kernel
 prompt = """{{$input}}
 """
 
+# Configure execution settings for OpenAI ChatPrompt
 execution_settings = sk_oai.OpenAIChatPromptExecutionSettings(
     ai_model_id="gpt-3.5-turbo",
     max_tokens=1000,
     temperature=0.7,
 )
+
+# Configure prompt template
 prompt_template_config = sk.PromptTemplateConfig(
     template=prompt,
     name="ner",
@@ -32,6 +36,8 @@ prompt_template_config = sk.PromptTemplateConfig(
     ],
     execution_settings=execution_settings,
 )
+
+# Create function for named entity extraction using the prompt template
 named_entity_extract = kernel.create_function_from_prompt(
     function_name="nerFunc",
     plugin_name="chatPlugin",
@@ -39,13 +45,15 @@ named_entity_extract = kernel.create_function_from_prompt(
 )
 
 
-
+# Function to get user's name using speech input
 def get_name():
     i = 5
     while i > 0:
         try:
+            # Prompt user to confirm their name
             TextToSpeech('Kindly, confirm your name?')
             user_input = SpeechToText()
+            # Extract name using semantic kernel function
             name = str(asyncio.run(kernel.invoke(named_entity_extract, sk.KernelArguments(input=Name_extract_prompt + '\n\n' + user_input))))
             Validate_Output(name)
             print(name)
@@ -57,12 +65,15 @@ def get_name():
     TextToSpeech("Sorry! Your appointment could not be booked this time. Try again later.")
 
 
+# Function to get user's EMR ID using speech input
 def get_emr_id():
     i = 5
     while i > 0:
         try:
+            # Prompt user to speak their EMR ID
             TextToSpeech('Now, please speak up your EMR ID!')
             user_input = SpeechToText()
+            # Extract EMR ID using semantic kernel function
             EMR_id = str(asyncio.run(kernel.invoke(named_entity_extract, sk.KernelArguments(input=EMR_id_extract_prompt + '\n\n' + user_input))))
             Validate_Output(EMR_id)
             print(EMR_id)
@@ -73,13 +84,15 @@ def get_emr_id():
     TextToSpeech("Sorry! Your appointment could not be booked this time. Try again later.")
             
 
-
+# Function to get user's preferred appointment date using speech input
 def get_date():
     i = 5
     while i > 0:
         try:
+            # Prompt user to specify preferred appointment date
             TextToSpeech('When you are available for your next appointment?')
             user_input = SpeechToText()
+            # Extract date using semantic kernel function
             date = str(asyncio.run(kernel.invoke(named_entity_extract, sk.KernelArguments(input=Date_extract_prompt + '\n\n' + user_input))))
             Validate_Output(date)
             print(date)
@@ -96,9 +109,13 @@ def main():
     wishme()
 
     TextToSpeech('I am calling you to book your next visit to the hospital ward.')
+    # Get user's name
     name = get_name()
+    # Get user's EMR ID
     EMR_id = get_emr_id()
+    # Get user's preferred appointment date
     date = get_date()
+    # Confirm the appointment booking details to the user
     TextToSpeech(f'Alright! So I\'m booking your appointment for {date} with EMR ID {EMR_id}')
     print('++++++++++++++++++++++')
     print('Name: ', name)
