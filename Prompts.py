@@ -43,6 +43,7 @@ The date should be returned in dd-mm-yyyy format.
 The current date is {datetime.datetime.now().strftime("%d-%m-%Y")}.
 If no month or year is mentioned, then consider the current ongoing month or year respectively.
 Do not include any extra words just return the date.
+If no date is found, then simply return 'None'.
 
 '''
 
@@ -53,6 +54,7 @@ heart_rate_extract_prompt = '''Get the list of heart rate readings from the text
 The text is transcribed from human natural speech.
 The list should be in comma separated text format.
 Just return the list, do not include any extra words.
+If no readings are found, then simply return 'None'.
 For example, "72, 60, 85, 105, 75".
 '''
 
@@ -62,5 +64,6 @@ other_health_parameters_extract_prompt = '''Extract the list of health issues fr
 The text is transcribed from human natural speech.
 The output list should be in comma seperated format.
 Do not include any text other than the name of health diseases.
+If no parameters are found, then simply return 'None'.
 
 '''
